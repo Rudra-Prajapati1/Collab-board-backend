@@ -1,13 +1,18 @@
 import mongoose from "mongoose";
 import Board from "../models/Board.js";
 
-export const validateObjectId = (req, res, next) => {
-  const { id } = req.params;
+export const validateObjectId = (paramName) => {
+  return (req, res, next) => {
+    const value = req.params[paramName];
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ message: "Invalid board ID" });
-  }
-  next();
+    if (!mongoose.Types.ObjectId.isValid(value)) {
+      return res.status(400).json({
+        message: `Invalid ${paramName}`,
+      });
+    }
+
+    next();
+  };
 };
 
 export const loadBoard = async (req, res, next) => {

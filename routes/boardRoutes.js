@@ -1,10 +1,13 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import {
+  addMember,
   createBoard,
   deleteBoard,
   getBoardById,
+  getBoardMembers,
   getBoards,
+  removeMember,
   updateBoard,
 } from "../controllers/boardController.js";
 import {
@@ -17,7 +20,7 @@ import {
 const boardRouter = express.Router();
 
 boardRouter.use(protect);
-boardRouter.use("/:id", validateObjectId, loadBoard);
+boardRouter.use("/:id", validateObjectId("id"), loadBoard);
 
 boardRouter.route("/").get(getBoards).post(createBoard);
 boardRouter
@@ -25,5 +28,15 @@ boardRouter
   .get(checkBoardAccess, getBoardById)
   .patch(checkBoardOwner, updateBoard)
   .delete(checkBoardOwner, deleteBoard);
+
+//Member routes
+boardRouter
+  .route("/:id/members")
+  .get(checkBoardAccess, getBoardMembers)
+  .post(checkBoardOwner, addMember);
+
+boardRouter
+  .route("/:id/members/:memberId")
+  .delete(validateObjectId("memberId"), checkBoardOwner, removeMember);
 
 export default boardRouter;

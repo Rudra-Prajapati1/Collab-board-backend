@@ -6,6 +6,7 @@ import cors from "cors";
 // import initSocket from "./socket/socket";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoute.js";
+import requestLogger from "./middleware/requestLogger.js";
 
 connectDB();
 
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json());
+app.use(requestLogger);
 
 app.get("/", (req, res) => {
   res.status(200).send("Server is live!");

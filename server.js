@@ -5,8 +5,9 @@ import cors from "cors";
 // import { Server } from "socket.io";
 // import initSocket from "./socket/socket";
 import connectDB from "./config/db.js";
-import authRouter from "./routes/authRoute.js";
+import authRouter from "./routes/authRoutes.js";
 import requestLogger from "./middleware/requestLogger.js";
+import boardRouter from "./routes/boardRoutes.js";
 
 connectDB();
 
@@ -33,6 +34,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/boards", boardRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

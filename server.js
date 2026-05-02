@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import requestLogger from "./middleware/requestLogger.js";
 import boardRouter from "./routes/boardRoutes.js";
+import taskRouter from "./routes/taskRoutes.js";
 
 connectDB();
 
@@ -33,8 +34,9 @@ app.get("/health", (req, res) => {
   res.status(200).send("Server is runnig fine.!");
 });
 
-app.use("/api/auth", authRouter);
-app.use("/api/boards", boardRouter);
+app.use("/api", authRouter);
+app.use("/api", boardRouter);
+app.use("/api", taskRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {

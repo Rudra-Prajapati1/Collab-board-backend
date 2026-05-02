@@ -20,23 +20,23 @@ import {
 const boardRouter = express.Router();
 
 boardRouter.use(protect);
-boardRouter.use("/:id", validateObjectId("id"), loadBoard);
+boardRouter.use("/board/:id", validateObjectId("id"), loadBoard);
 
-boardRouter.route("/").get(getBoards).post(createBoard);
+boardRouter.route("/board").get(getBoards).post(createBoard);
 boardRouter
-  .route("/:id")
+  .route("/board/:id")
   .get(checkBoardAccess, getBoardById)
   .patch(checkBoardOwner, updateBoard)
   .delete(checkBoardOwner, deleteBoard);
 
 //Member routes
 boardRouter
-  .route("/:id/members")
+  .route("/board/:id/members")
   .get(checkBoardAccess, getBoardMembers)
   .post(checkBoardOwner, addMember);
 
 boardRouter
-  .route("/:id/members/:memberId")
+  .route("/board/:id/members/:memberId")
   .delete(validateObjectId("memberId"), checkBoardOwner, removeMember);
 
 export default boardRouter;

@@ -17,7 +17,9 @@ export const validateObjectId = (paramName) => {
 
 export const loadBoard = async (req, res, next) => {
   try {
-    const board = await Board.findById(req.params.id);
+    const board = await Board.findById(req.params.id)
+      .populate("members", "name email")
+      .populate("owner", "name email");
 
     if (!board) {
       return res.status(404).json({ message: "Board not found" });
@@ -36,8 +38,10 @@ export const checkBoardAccess = (req, res, next) => {
   const userId = req.user._id.toString();
   const board = req.board;
 
-  const isOwner = board.owner.toString() === userId;
-  const isMember = board.members.some((member) => member.toString() === userId);
+  const isOwner = board.owner._id.toString() === userId;
+  const isMember = board.members.some(
+    (member) => member._id.toString() === userId,
+  );
 
   if (!isOwner && !isMember) {
     return res.status(403).json({ message: "Not authorized" });
@@ -49,7 +53,7 @@ export const checkBoardAccess = (req, res, next) => {
 export const checkBoardOwner = (req, res, next) => {
   const userId = req.user._id.toString();
 
-  if (req.board.owner.toString() !== userId) {
+  if (req.board.owner._id.toString() !== userId) {
     return res.status(403).json({ message: "Only owner can modify board" });
   }
 

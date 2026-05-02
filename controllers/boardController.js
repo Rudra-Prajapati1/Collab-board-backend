@@ -80,9 +80,7 @@ export const deleteBoard = async (req, res) => {
 //Members functions
 export const getBoardMembers = async (req, res) => {
   try {
-    const board = await req.board
-      .populate("members", "name email")
-      .populate("owner", "name email");
+    const board = req.board;
 
     res.status(200).json({
       owner: board.owner,
@@ -109,14 +107,14 @@ export const addMember = async (req, res) => {
 
     const board = req.board;
 
-    if (board.owner.toString() === memberId) {
+    if (board.owner._id.toString() === memberId) {
       return res
         .status(400)
         .json({ message: "Owner is already part of board" });
     }
 
     const alreadyMember = board.members.some(
-      (member) => member.toString() === memberId,
+      (member) => member._id.toString() === memberId,
     );
 
     if (alreadyMember) {
@@ -126,12 +124,10 @@ export const addMember = async (req, res) => {
     board.members.push(memberId);
     await board.save();
 
-    res
-      .status(200)
-      .json({
-        message: "Member added successfully",
-        board: formatBoard(board),
-      });
+    res.status(200).json({
+      message: "Member added successfully",
+      board: formatBoard(board),
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
@@ -144,12 +140,12 @@ export const removeMember = async (req, res) => {
 
     const board = req.board;
 
-    if (board.owner.toString() === memberId) {
+    if (board._id.owner.toString() === memberId) {
       return res.status(400).json({ message: "Cannot remove board owner" });
     }
 
     const isMember = board.members.some(
-      (member) => member.toString() === memberId,
+      (member) => member._id.toString() === memberId,
     );
 
     if (!isMember) {
@@ -157,7 +153,7 @@ export const removeMember = async (req, res) => {
     }
 
     board.members = board.members.filter(
-      (member) => member.toString() !== memberId,
+      (member) => member._id.toString() !== memberId,
     );
 
     await board.save();

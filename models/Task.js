@@ -55,6 +55,12 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-taskSchema.index({ board: 1, status: 1, position: 1 });
+taskSchema.index(
+  { board: 1, status: 1, position: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { isArchived: false },
+  },
+);
 const Task = mongoose.model("Task", taskSchema);
 export default Task;

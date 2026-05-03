@@ -140,7 +140,7 @@ export const removeMember = async (req, res) => {
 
     const board = req.board;
 
-    if (board._id.owner.toString() === memberId) {
+    if (board.owner.toString() === memberId) {
       return res.status(400).json({ message: "Cannot remove board owner" });
     }
 

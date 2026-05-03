@@ -2,6 +2,7 @@ import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import {
   checkBoardAccess,
+  loadBoard,
   validateObjectId,
 } from "../middleware/boardMiddleware.js";
 import {
@@ -22,8 +23,8 @@ taskRouter.use(protect);
 
 taskRouter
   .route("/boards/:id/tasks")
-  .get(validateObjectId("id"), checkBoardAccess, getTaskByBoard)
-  .post(validateObjectId("id"), checkBoardAccess, createTask);
+  .get(validateObjectId("id"), loadBoard, checkBoardAccess, getTaskByBoard)
+  .post(validateObjectId("id"), loadBoard, checkBoardAccess, createTask);
 
 taskRouter.use(
   "/tasks/:taskId",
